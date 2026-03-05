@@ -68,7 +68,7 @@
             background: #F8FAFC;
             padding: 16px;
             width: 100%;
-            font-size: 36px;
+            font-size: 34px;
             font-weight: 900;
             text-align: center;
             outline: none;
@@ -94,11 +94,6 @@
             100% { transform: scale(1); box-shadow: 0 0 0 0px rgba(239, 68, 68, 0); }
         }
 
-        .pattern-dots {
-            background-image: radial-gradient(#00000022 1.5px, transparent 1.5px);
-            background-size: 16px 16px;
-        }
-
         .animate-pop { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
     </style>
@@ -109,7 +104,6 @@
     <script type="text/babel">
         const { useState, useEffect, useMemo, useRef } = React;
 
-        // ⚠️ 請確保此網址為妳在 Google Apps Script「新增部署」後取得的網址
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwpEFJFVCj2O2YoG94xRfKGEM1RI_Yvcr_ATyrOS1L2dJnYHhjnc-9ZGhuC2ErVuuGu/exec"; 
 
         const Icons = {
@@ -124,22 +118,40 @@
             RotateCcw: (p) => <svg width={p.size||24} height={p.size||24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={p.className}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
         };
 
+        // 題庫擴充：包含 Word Family 與例句
         const vocabList = [
-            { word: "warn", type: "vt.", ipa: "/wɔːrn/", syllables: ["warn"], stress: 0, meaning: "警告；提醒", fillBlank: { s: "Bill's parents ___ him not to go mountain climbing because a typhoon was coming.", a: "warned", t: "比爾的父母警告他不要去登山。" } },
-            { word: "announcement", type: "n.", ipa: "/əˈnaʊns.mənt/", syllables: ["an", "nounce", "ment"], stress: 1, meaning: "公告；通知", fillBlank: { s: "Our English teacher made an ___ that there would be a test on Thursday.", a: "announcement", t: "老師宣佈週四將有一場考試。" } },
-            { word: "research", type: "n.", ipa: "/ˈriː.sɜːrtʃ/", syllables: ["re", "search"], stress: 0, meaning: "研究", fillBlank: { s: "Dr. Smith is doing some ___ into how dolphins communicate with each other.", a: "research", t: "史密斯博士正在研究海豚通訊。" } },
-            { word: "flavor", type: "n.", ipa: "/ˈfleɪ.vər/", syllables: ["fla", "vor"], stress: 0, meaning: "味道；風味", fillBlank: { s: "The tea that is grown in this mountain village has a gentle ___ of flowers.", a: "flavor", t: "這個山村種植的茶帶有淡淡花香。" } },
-            { word: "pressure", type: "n.", ipa: "/ˈpreʃ.ər/", syllables: ["pres", "sure"], stress: 0, meaning: "壓力", fillBlank: { s: "The nurses are under great ___ to work long hours during the pandemic.", a: "pressure", t: "護理師們面臨超時工作的巨大壓力。" } },
-            { word: "normally", type: "adv.", ipa: "/ˈnɔːr.mə.li/", syllables: ["nor", "mal", "ly"], stress: 0, meaning: "通常", fillBlank: { s: "Uncle Frank ___ reads the newspaper over breakfast, but today he watched TV.", a: "normally", t: "法蘭克叔叔通常邊吃早餐邊看報紙。" } },
-            { word: "distinguish", type: "v.", ipa: "/dɪˈstɪŋ.ɡwɪʃ/", syllables: ["dis", "tin", "guish"], stress: 1, meaning: "分辨；區別", fillBlank: { s: "Nancy and her twin sister look so similar that even their parents can't ___ between them.", a: "distinguish", t: "南西與她的雙胞胎姊妹長得太像了。" } },
-            { word: "accurately", type: "adv.", ipa: "/ˈæk.jə.rət.li/", syllables: ["ac", "cu", "rate", "ly"], stress: 0, meaning: "精確地", fillBlank: { s: "So far scientists have not found a way to predict earthquakes ___.", a: "accurately", t: "到目前為止，科學家尚未能準確預測地震。" } },
-            { word: "function", type: "v.", ipa: "/ˈfʌŋk.ʃən/", syllables: ["func", "tion"], stress: 0, meaning: "運作；功能", fillBlank: { s: "Malcolm's favorite couch also ___ as a bed when one of his friends stays over.", a: "functions", t: "這幅沙發在朋友留宿時也可以充當床鋪。" } },
-            { word: "blame", type: "vt.", ipa: "/bleɪm/", syllables: ["blame"], stress: 0, meaning: "歸咎；責怪", fillBlank: { s: "The police ___ the drunken driver for the terrible car accident.", a: "blamed", t: "警方將這場意外歸咎於該名酒駕司機。" } },
-            { word: "affect", type: "vt.", ipa: "/əˈfekt/", syllables: ["af", "fect"], stress: 1, meaning: "影響", fillBlank: { s: "Global warming has greatly ___ the lives of many wild animals.", a: "affected", t: "全球暖化已極大地影響了野生動物的生活。" } },
-            { word: "passenger", type: "n.", ipa: "/ˈpæs.ən.dʒər/", syllables: ["pas", "sen", "ger"], stress: 0, meaning: "乘客", fillBlank: { s: "___ on the plane were glad to hear that the weather was fine.", a: "Passengers", t: "飛機上的乘客很高興聽到天氣良好。" } },
-            { word: "distract", type: "vt.", ipa: "/dɪˈstrækt/", syllables: ["dis", "tract"], stress: 1, meaning: "使分心", fillBlank: { s: "Ken was trying to study, but the loud music from next door kept ___ him.", a: "distracting", t: "隔壁傳來的音樂聲一直讓肯分心。" } },
-            { word: "indicate", type: "vt.", ipa: "/ˈɪn.dɪ.keɪt/", syllables: ["in", "di", "cate"], stress: 0, meaning: "指出；顯示", fillBlank: { s: "Recent research clearly ___ that only 3% of the children get enough exercise.", a: "indicates", t: "最近的研究指出，只有 3% 孩童運動足夠。" } },
-            { word: "solution", type: "n.", ipa: "/səˈluː.ʃən/", syllables: ["so", "lu", "tion"], stress: 1, meaning: "解決方法", fillBlank: { s: "The government is trying to think of a ___ to the problem of air pollution.", a: "solution", t: "政府正試圖想出解決空氣污染的方法。" } }
+            { word: "warn", type: "vt.", meaning: "警告", s: "Bill's parents ___ him not to go mountain climbing.", a: "warned", t: "比爾的父母警告他不要去登山。" },
+            { word: "warning", type: "n.", meaning: "警告", s: "The government issued a ___ about the typhoon.", a: "warning", t: "政府發布了關於颱風的警告。" },
+            { word: "announcement", type: "n.", meaning: "公告", s: "Our English teacher made an ___ that there would be a test.", a: "announcement", t: "老師宣布週四將有一場考試。" },
+            { word: "announce", type: "vt.", meaning: "宣佈", s: "The principal ___ that the sports day was postponed.", a: "announced", t: "校長宣佈運動會延期了。" },
+            { word: "research", type: "n.", meaning: "研究", s: "Dr. Smith is doing some ___ into dolphin communication.", a: "research", t: "史密斯博士正在研究海豚通訊。" },
+            { word: "researcher", type: "n.", meaning: "研究人員", s: "A team of ___ is studying the new disease.", a: "researchers", t: "一組研究人員正在研究這種新疾病。" },
+            { word: "flavor", type: "n.", meaning: "味道", s: "This mountain tea has a gentle ___ of flowers.", a: "flavor", t: "這種山茶帶有淡淡花香。" },
+            { word: "flavoring", type: "n.", meaning: "調味料", s: "The cook added some lemon ___ to the cake.", a: "flavoring", t: "廚師在蛋糕裡加了一些檸檬香料。" },
+            { word: "pressure", type: "n.", meaning: "壓力", s: "The nurses are under great ___ to work long hours.", a: "pressure", t: "護理師們面臨超時工作的巨大壓力。" },
+            { word: "normally", type: "adv.", meaning: "通常", s: "Uncle Frank ___ reads the newspaper over breakfast.", a: "normally", t: "法蘭克叔叔通常邊吃早餐邊看報紙。" },
+            { word: "normal", type: "adj.", meaning: "正常的", s: "It's ___ to feel nervous before a big exam.", a: "normal", t: "在大考前感到緊張是正常的。" },
+            { word: "distinguish", type: "v.", meaning: "分辨", s: "Even their parents can't ___ between the twins.", a: "distinguish", t: "甚至連父母都分不出這對雙胞胎。" },
+            { word: "accurately", type: "adv.", meaning: "精確地", s: "So far scientists cannot predict earthquakes ___.", a: "accurately", t: "到目前為止，科學家尚未能準確預測地震。" },
+            { word: "accurate", type: "adj.", meaning: "精確的", s: "The weather report wasn't very ___ today.", a: "accurate", t: "今天的氣象預報不是很準確。" },
+            { word: "function", type: "v.", meaning: "運作", s: "This couch also ___ as a guest bed.", a: "functions", t: "這幅沙發也可以充當客房床鋪。" },
+            { word: "functional", type: "adj.", meaning: "實用的", s: "This furniture is simple but very ___.", a: "functional", t: "這件家具簡單但非常實用。" },
+            { word: "blame", type: "vt.", meaning: "歸咎", s: "The police ___ the driver for the terrible accident.", a: "blamed", t: "警方將這場意外歸咎於司機。" },
+            { word: "affect", type: "vt.", meaning: "影響", s: "Global warming has greatly ___ the wild animals.", a: "affected", t: "全球暖化已極大地影響了野生動物。" },
+            { word: "passenger", type: "n.", meaning: "乘客", s: "The ___ on the plane were glad to hear the good news.", a: "passengers", t: "飛機上的乘客很高興聽到好消息。" },
+            { word: "distract", type: "vt.", meaning: "使分心", s: "The loud music from next door kept ___ Ken.", a: "distracting", t: "隔壁傳來的音樂聲一直讓肯分心。" },
+            { word: "distraction", type: "n.", meaning: "分心物", s: "Turn off your phone to avoid ___ during study.", a: "distractions", t: "關掉手機以避免在讀書時分心。" },
+            { word: "indicate", type: "vt.", meaning: "指出", s: "Recent research clearly ___ that exercise is important.", a: "indicates", t: "最近的研究指出運動很重要。" },
+            { word: "indication", type: "n.", meaning: "跡象", s: "A dark cloud is usually an ___ of rain.", a: "indication", t: "烏雲通常是下雨的跡象。" },
+            { word: "solution", type: "n.", meaning: "解決方法", s: "The government is trying to think of a ___ to pollution.", a: "solution", t: "政府正試圖想出解決污染的方法。" },
+            { word: "solve", type: "vt.", meaning: "解決", s: "Can you help me ___ this difficult math problem?", a: "solve", t: "你能幫我解決這道難的數學題嗎？" },
+            { word: "ingredient", type: "n.", meaning: "成分", s: "This dish only uses natural ___ like vegetables.", a: "ingredients", t: "這道菜只使用天然成分，如蔬菜。" },
+            { word: "recipe", type: "n.", meaning: "食譜", s: "Does this cookbook include a ___ for apple pie?", a: "recipe", t: "這本食譜書有包含蘋果派的作法嗎？" },
+            { word: "comparison", type: "n.", meaning: "比較", s: "By ___, life in any other city costs much less.", a: "comparison", t: "相較之下，住在其他城市花費少很多。" },
+            { word: "compare", type: "vt.", meaning: "比較", s: "Don't ___ yourself with other people.", a: "compare", t: "不要拿自己跟別人比較。" },
+            { word: "remain", type: "vi.", meaning: "保持", s: "When Judy went back, she found things ___ unchanged.", a: "remained", t: "當朱蒂回去時，她發現事物保持不變。" },
+            { word: "provide", type: "vt.", meaning: "提供", s: "This hotel ___ a nice breakfast and free Wi-Fi.", a: "provides", t: "這家飯店提供美味早餐與免費 Wi-Fi。" },
+            { word: "provision", type: "n.", meaning: "提供", s: "The ___ of food is essential during an emergency.", a: "provision", t: "緊急情況下提供食物是必要的。" }
         ];
 
         const App = () => {
@@ -166,6 +178,7 @@
             };
 
             const startQuiz = (mode) => {
+                // ✨ 抽選 15 題
                 const q = [...vocabList].sort(() => Math.random() - 0.5).slice(0, 15);
                 setShuffledQuiz(q);
                 setQuizMode(mode);
@@ -183,7 +196,7 @@
                 
                 if (ok === null) {
                     if(quizMode === 'spell') ok = userInput.trim().toLowerCase() === cur.word.toLowerCase();
-                    if(quizMode === 'fill') ok = userInput.trim().toLowerCase() === cur.fillBlank.a.toLowerCase();
+                    if(quizMode === 'fill') ok = userInput.trim().toLowerCase() === cur.a.toLowerCase();
                 }
 
                 setIsCorrect(ok);
@@ -205,13 +218,19 @@
                 } else handleSubmitScore();
             };
 
+            const handleTryAgain = () => {
+                setShowFeedback(false);
+                setIsCorrect(null);
+                setRecognitionText('');
+            };
+
             const handleSubmitScore = async () => {
                 setView('result');
                 const finalPerc = Math.round((score / 15) * 100);
                 if (GOOGLE_SCRIPT_URL) {
                     setSubmitting(true);
                     try {
-                        // ✨ 對接 code.gs 的欄位：班級, 座號, 姓名, 題型, 分數
+                        // ✨ 傳送：班級, 座號, 姓名, 題型, 分數
                         await fetch(GOOGLE_SCRIPT_URL, {
                             method: 'POST',
                             mode: 'no-cors',
@@ -232,7 +251,7 @@
             const handleStartRecording = () => {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 if (!SpeechRecognition) {
-                    alert("手機瀏覽器不支援語音辨識。請確保在 iOS Safari 或 Android Chrome 中開啟。");
+                    alert("手機瀏覽器不支援語音辨識。請使用 Safari 或 Chrome。");
                     return;
                 }
 
@@ -245,30 +264,18 @@
                 const recognition = new SpeechRecognition();
                 recognition.lang = 'en-US';
                 recognition.interimResults = false;
-                recognition.maxAlternatives = 1;
                 recognitionRef.current = recognition;
 
-                recognition.onstart = () => {
-                    setIsRecording(true);
-                    setRecognitionText('');
-                };
-
-                recognition.onresult = (event) => {
-                    const speech = event.results[0][0].transcript.toLowerCase().trim().replace(/[.,!?;:]/g, "");
+                recognition.onstart = () => { setIsRecording(true); setRecognitionText(''); };
+                recognition.onresult = (e) => {
+                    const speech = e.results[0][0].transcript.toLowerCase().trim().replace(/[.,!?;:]/g, "");
                     const target = shuffledQuiz[quizIndex].word.toLowerCase();
                     setRecognitionText(speech);
                     checkResult(speech === target || speech.includes(target) || target.includes(speech));
                 };
-
-                recognition.onerror = (err) => {
-                    setIsRecording(false);
-                    if (err.error === 'no-speech') alert("沒聽到聲音，請再試一次！");
-                    else if (err.error === 'not-allowed') alert("請允許開啟麥克風權限！");
-                };
-
-                recognition.onend = () => { setIsRecording(false); };
-
-                try { recognition.start(); } catch(e) { setIsRecording(false); }
+                recognition.onerror = () => setIsRecording(false);
+                recognition.onend = () => setIsRecording(false);
+                recognition.start();
             };
 
             if (view === 'login') {
@@ -298,7 +305,7 @@
                             <Icons.Zap size={28} className="text-yellow-400 fill-current" />
                             <div className="flex flex-col"><span className="font-black text-xl italic leading-none text-slate-800 tracking-tighter">VOCABPOP</span><span className="text-[12px] text-slate-400 font-bold uppercase mt-1 leading-none">{user.class}-{user.no} {user.name}</span></div>
                         </div>
-                        <div className="bg-black text-white rounded-full px-5 py-2 flex items-center gap-2 text-sm font-black tracking-tighter text-yellow-400">LV.1</div>
+                        <div className="bg-black text-white rounded-full px-5 py-2 flex items-center gap-2 text-sm font-black tracking-tighter">LV.1</div>
                     </div>
                 </div>
             );
@@ -310,12 +317,12 @@
                         <div className="px-6 mt-6 mb-12 flex-1 flex flex-col justify-between animate-pop">
                             {[
                                 { m: 'speak', t: 'PRO SPEAK', d: '發音挑戰 (隨機 15 題)', c: '#86EFAC', i: <Icons.Mic size={45}/> },
-                                { m: 'spell', t: 'SPELL IT', d: '聽寫挑戰 (提供詞性)', c: '#93C5FD', i: <Icons.Keyboard size={45}/> },
-                                { m: 'fill', t: 'FILL IN', d: '搭配克漏字 (課本例句)', c: '#FDBA74', i: <Icons.Pen size={45}/> }
+                                { m: 'spell', t: 'SPELL IT', d: '聽寫挑戰 (15 題)', c: '#93C5FD', i: <Icons.Keyboard size={45}/> },
+                                { m: 'fill', t: 'FILL IN', d: '例句客漏字 (15 題)', c: '#FDBA74', i: <Icons.Pen size={45}/> }
                             ].map((b, i) => (
                                 <button key={i} onClick={() => startQuiz(b.m)} className="flex-1 brutal-card-heavy p-6 flex items-center gap-8 rounded-[40px] min-h-[110px]" style={{backgroundColor: b.c}}>
                                     <div className="bg-white p-5 rounded-3xl border-4 border-black shadow-[6px_6px_0px_0px_#000]">{b.i}</div>
-                                    <div className="text-left"><div className="font-black text-3xl mb-1 text-black tracking-tight leading-none">{b.t}</div><div className="text-[sm] font-bold opacity-70 uppercase tracking-tight leading-none mt-1">{b.d}</div></div>
+                                    <div className="text-left"><div className="font-black text-3xl mb-1 text-black tracking-tight leading-none">{b.t}</div><div className="text-sm font-bold opacity-70 uppercase tracking-tight leading-none mt-1">{b.d}</div></div>
                                 </button>
                             ))}
                         </div>
@@ -343,10 +350,10 @@
                                     <input autoFocus className="underline-input" placeholder="Type..." value={userInput} onChange={e => setUserInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && userInput && checkResult()}/>
                                 </div>
                             )}
-                            {quizMode === 'fill' && <div className="text-left w-full"><p className="text-4xl font-black leading-snug mb-10 text-slate-800">{cur.fillBlank.s.split('___')[0]}<span className="text-[#5D5FEF] border-b-6 border-black px-2 mx-1">{userInput || '____'}</span>{cur.fillBlank.s.split('___')[1]}</p><p className="text-xl text-slate-400 mb-10 italic border-l-6 pl-4 leading-relaxed font-bold tracking-tight">{cur.fillBlank.t}</p><input autoFocus className="underline-input" placeholder="Fill answer..." value={userInput} onChange={e => setUserInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && userInput && checkResult()}/></div>}
-                            {quizMode === 'speak' && <div className="w-full text-center animate-pop"><h2 className="text-8xl font-black mb-4 tracking-tighter text-slate-900 leading-none">{cur.word}</h2><div className="bg-black/5 px-8 py-3 rounded-2xl text-slate-400 text-xl font-black mb-12 italic tracking-tighter">{cur.ipa}</div><div className="flex gap-4 justify-center mb-12">{cur.syllables.map((s, i) => <div key={i} className={`syllable-bubble border-4 ${i === cur.stress ? 'bg-[#FDE047]' : 'bg-white'}`}>{s}</div>)}</div>{recognitionText && <p className="text-blue-500 font-black text-xl animate-bounce">Hear: "{recognitionText}"</p>}</div>}
+                            {quizMode === 'fill' && <div className="text-left w-full"><p className="text-4xl font-black leading-snug mb-10 text-slate-800">{cur.s.split('___')[0]}<span className="text-[#5D5FEF] border-b-6 border-black px-2 mx-1">{userInput || '____'}</span>{cur.s.split('___')[1]}</p><p className="text-xl text-slate-400 mb-10 italic border-l-6 pl-4 leading-relaxed font-bold tracking-tight">{cur.t}</p><input autoFocus className="underline-input" placeholder="Fill answer..." value={userInput} onChange={e => setUserInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && userInput && checkResult()}/></div>}
+                            {quizMode === 'speak' && <div className="w-full text-center animate-pop"><h2 className="text-8xl font-black mb-4 tracking-tighter text-slate-900 leading-none">{cur.word}</h2><div className="bg-black/5 px-8 py-3 rounded-2xl text-slate-400 text-xl font-black mb-12 italic tracking-tighter">{cur.word.length} letters</div>{recognitionText && <p className="text-blue-500 font-black text-xl animate-bounce">Hear: "{recognitionText}"</p>}</div>}
                             
-                            {showFeedback && <div className={`absolute -bottom-10 left-1/2 -translate-x-1/2 p-8 rounded-3xl border-6 border-black font-black w-[90%] text-center text-3xl shadow-[10px_10px_0px_0px_#000] z-50 animate-pop ${isCorrect ? 'bg-[#86EFAC]' : 'bg-[#FCA5A5]'}`}>{isCorrect ? '✨ CORRECT!' : (quizMode === 'speak' ? '❌ TRY AGAIN?' : `❌ ANS: ${cur.word}`)}</div>}
+                            {showFeedback && <div className={`absolute -bottom-10 left-1/2 -translate-x-1/2 p-8 rounded-3xl border-6 border-black font-black w-[90%] text-center text-3xl shadow-[10px_10px_0px_0px_#000] z-50 animate-pop ${isCorrect ? 'bg-[#86EFAC]' : 'bg-[#FCA5A5]'}`}>{isCorrect ? '✨ CORRECT!' : (quizMode === 'speak' ? '❌ TRY AGAIN?' : `❌ ANS: ${quizMode === 'spell' ? cur.word : cur.a}`)}</div>}
                         </div>
 
                         {quizMode === 'speak' && (
