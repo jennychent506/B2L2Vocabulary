@@ -20,12 +20,14 @@
             display: flex;
             justify-content: center;
             min-height: 100vh;
+            min-height: -webkit-fill-available;
         }
 
         #root {
             width: 100%;
             max-width: 480px;
             height: 100vh;
+            height: 100dvh;
             display: flex;
             flex-direction: column;
             background: transparent;
@@ -34,40 +36,40 @@
 
         .brutal-card-heavy {
             background: white;
-            border: 4px solid #000;
-            box-shadow: 10px 10px 0px 0px #000;
+            border: 5px solid #000;
+            box-shadow: 12px 12px 0px 0px #000;
         }
 
         .brutal-btn {
             border: 4px solid #000;
-            box-shadow: 6px 6px 0px 0px #000;
+            box-shadow: 8px 8px 0px 0px #000;
             transition: all 0.1s ease;
             touch-action: manipulation;
         }
 
         .brutal-btn:active:not(:disabled) {
-            transform: translate(3px, 3px);
-            box-shadow: 3px 3px 0px 0px #000;
+            transform: translate(4px, 4px);
+            box-shadow: 4px 4px 0px 0px #000;
         }
 
         .brutal-input {
             border: 4px solid #000;
-            border-radius: 16px;
-            padding: 14px;
+            border-radius: 18px;
+            padding: 16px;
             outline: none;
             font-weight: 800;
             width: 100%;
             background: white;
-            font-size: 20px;
+            font-size: 22px;
         }
 
         .underline-input {
             border: none;
-            border-bottom: 5px solid #5D5FEF;
+            border-bottom: 6px solid #5D5FEF;
             background: #F8FAFC;
-            padding: 14px;
+            padding: 16px;
             width: 100%;
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 900;
             text-align: center;
             outline: none;
@@ -75,19 +77,19 @@
 
         .syllable-bubble {
             border: 3px solid #000;
-            padding: 4px 14px;
-            border-radius: 10px;
+            padding: 5px 16px;
+            border-radius: 12px;
             font-weight: 900;
-            font-size: 16px;
+            font-size: 18px;
         }
 
         .match-item {
             border: 3px solid #F9A8D4;
             background: white;
-            padding: 12px;
-            border-radius: 14px;
+            padding: 14px;
+            border-radius: 16px;
             font-weight: 900;
-            font-size: 15px;
+            font-size: 16px;
             text-align: center;
         }
 
@@ -95,24 +97,24 @@
         .match-item.correct { background: #86EFAC; border-color: #22C55E; color: #14532D; }
 
         .mic-recording {
-            animation: pulse-red 1s infinite;
+            animation: pulse-red 0.8s infinite;
             background-color: #ef4444 !important;
             color: white !important;
         }
 
         @keyframes pulse-red {
-            0% { transform: scale(1); box-shadow: 0 0 0 0px rgba(239, 68, 68, 0.7); }
-            70% { transform: scale(1.1); box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
+            0% { transform: scale(1); box-shadow: 0 0 0 0px rgba(239, 68, 68, 0.6); }
+            70% { transform: scale(1.15); box-shadow: 0 0 0 25px rgba(239, 68, 68, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0px rgba(239, 68, 68, 0); }
         }
 
         .pattern-dots {
             background-image: radial-gradient(#00000022 1.5px, transparent 1.5px);
-            background-size: 14px 14px;
+            background-size: 16px 16px;
         }
 
         .animate-pop { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
@@ -132,14 +134,12 @@
             Keyboard: (p) => <svg width={p.size||24} height={p.size||24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={p.className}><rect x="2" y="4" width="20" height="16" rx="2" ry="2"/><path d="M6 8h.01"/><path d="M10 8h.01"/><path d="M14 8h.01"/><path d="M18 8h.01"/><path d="M8 12h.01"/><path d="M12 12h.01"/><path d="M16 12h.01"/><path d="M7 16h10"/></svg>,
             Pen: (p) => <svg width={p.size||24} height={p.size||24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={p.className}><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l5 5"/><path d="M9.5 14.5L16 8"/></svg>,
             ArrowRight: (p) => <svg width={p.size||24} height={p.size||24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={p.className}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>,
-            RotateCcw: (p) => <svg width={p.size||24} height={p.size||24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={p.className}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>,
-            Check: (p) => <svg width={p.size||24} height={p.size||24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={p.className}><polyline points="20 6 9 17 4 12"/></svg>,
-            X: (p) => <svg width={p.size||24} height={p.size||24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={p.className}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            RotateCcw: (p) => <svg width={p.size||24} height={p.size||24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={p.className}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
         };
 
         const vocabList = [
             { word: "warn", type: "vt.", ipa: "/wɔːrn/", syllables: ["warn"], stress: 0, meaning: "警告；提醒", family: "warning (n.) 警告", matchPairs: [["issue a warning", "發佈警告"], ["warn of danger", "警告危險"]], fillBlank: { s: "Bill's parents ___ him not to go mountain climbing because a typhoon was coming.", a: "warned", t: "比爾的父母警告他不要去登山。" } },
-            { word: "announcement", type: "n.", ipa: "/əˈnaʊns.mənt/", syllables: ["an", "nounce", "ment"], stress: 1, meaning: "公告；通知", family: "announce (v.) 宣布", matchPairs: [["make an announcement", "發表公告"], ["official announcement", "官方通知"]], fillBlank: { s: "Our English teacher made an ___ that there would be a test on Thursday.", a: "announcement", t: "我們的英文老師宣佈週四將會有一場考試。" } },
+            { word: "announcement", type: "n.", ipa: "/əˈnaʊns.mənt/", syllables: ["an", "nounce", "ment"], stress: 1, meaning: "公告；通知", family: "announce (v.) 宣布", matchPairs: [["make an announcement", "發表公告"], ["official announcement", "官方通知"]], fillBlank: { s: "Our English teacher made an ___ that there would be a test on Thursday.", a: "announcement", t: "老師宣佈週四將有一場考試。" } },
             { word: "research", type: "n.", ipa: "/ˈriː.sɜːrtʃ/", syllables: ["re", "search"], stress: 0, meaning: "研究", family: "researcher (n.) 研究人員", matchPairs: [["conduct research", "進行研究"], ["scientific research", "科學研究"]], fillBlank: { s: "Dr. Smith is doing some ___ into how dolphins communicate with each other.", a: "research", t: "史密斯博士正在研究海豚通訊。" } },
             { word: "flavor", type: "n.", ipa: "/ˈfleɪ.vər/", syllables: ["fla", "vor"], stress: 0, meaning: "味道；風味", family: "flavoring (n.) 調味", matchPairs: [["add flavor to", "增加風味"], ["artificial flavor", "人工調味"]], fillBlank: { s: "The tea that is grown in this mountain village has a gentle ___ of flowers.", a: "flavor", t: "這個山村種植的茶帶有淡淡花香。" } },
             { word: "pressure", type: "n.", ipa: "/ˈpreʃ.ər/", syllables: ["pres", "sure"], stress: 0, meaning: "壓力", family: "-", matchPairs: [["under great pressure", "壓力很大"], ["high blood pressure", "高血壓"]], fillBlank: { s: "The nurses are under great ___ to work long hours during the pandemic.", a: "pressure", t: "護理師們面臨超時工作的巨大壓力。" } },
@@ -154,46 +154,6 @@
             { word: "indicate", type: "vt.", ipa: "/ˈɪn.dɪ.keɪt/", syllables: ["in", "di", "cate"], stress: 0, meaning: "指出；顯示", family: "indication (n.) 跡象", matchPairs: [["clearly indicate", "清楚指出"], ["indicate a change", "顯示改變"]], fillBlank: { s: "Recent research clearly ___ that only 3% of the children get enough exercise.", a: "indicates", t: "最近的研究指出，只有 3% 孩童運動足夠。" } },
             { word: "solution", type: "n.", ipa: "/səˈluː.ʃən/", syllables: ["so", "lu", "tion"], stress: 1, meaning: "解決方法", family: "solve (v.) 解決", matchPairs: [["find a solution", "尋找對策"], ["solution to the problem", "問題解法"]], fillBlank: { s: "The government is trying to think of a ___ to the problem of air pollution.", a: "solution", t: "政府正試圖想出解決空氣污染的方法。" } }
         ];
-
-        const MiniMatch = ({ pairs, onWordSpeak }) => {
-            const [selected, setSelected] = useState(null);
-            const [completed, setCompleted] = useState([]);
-            const items = useMemo(() => {
-                const flat = [];
-                pairs.forEach((p, idx) => {
-                    flat.push({ id: `en-${idx}`, text: p[0], pair: idx, side: 'en' });
-                    flat.push({ id: `zh-${idx}`, text: p[1], pair: idx, side: 'zh' });
-                });
-                return flat.sort(() => Math.random() - 0.5);
-            }, [pairs]);
-
-            const handleClick = (item) => {
-                if (completed.includes(item.pair)) return;
-                if (!selected) setSelected(item);
-                else if (selected.id !== item.id && selected.side !== item.side && selected.pair === item.pair) {
-                    setCompleted([...completed, item.pair]);
-                    setSelected(null);
-                    onWordSpeak(pairs[item.pair][0]);
-                } else setSelected(item);
-            };
-
-            return (
-                <div className="bg-[#FFF0F5] border-2 border-[#F9A8D4] rounded-xl p-3 animate-pop shadow-sm">
-                    <div className="flex items-center gap-1.5 mb-1.5">
-                        <span className="text-pink-500 text-sm">✨</span>
-                        <span className="font-black text-[11px] uppercase tracking-widest text-pink-400 italic">Mini Match</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                        {items.map(it => (
-                            <button key={it.id} onClick={() => handleClick(it)}
-                                className={`match-item ${selected?.id === it.id ? 'selected' : ''} ${completed.includes(it.pair) ? 'correct' : ''}`}>
-                                {it.text}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            );
-        };
 
         const App = () => {
             const [view, setView] = useState('login'); 
@@ -210,7 +170,11 @@
             const [recognitionText, setRecognitionText] = useState('');
             const [submitting, setSubmitting] = useState(false);
 
+            // 用於儲存辨識實例的 Ref，方便隨時停止
+            const recognitionRef = useRef(null);
+
             const speak = (text) => {
+                window.speechSynthesis.cancel();
                 const u = new SpeechSynthesisUtterance(text);
                 u.lang = 'en-US'; u.rate = 0.85;
                 window.speechSynthesis.speak(u);
@@ -242,9 +206,7 @@
                 
                 if (ok || quizMode !== 'speak') {
                     if(ok) setScore(s => s + 1);
-                    setTimeout(() => {
-                        handleNext();
-                    }, 1500);
+                    setTimeout(handleNext, 1500);
                 }
             };
 
@@ -255,15 +217,7 @@
                     setRecognitionText('');
                     setShowFeedback(false);
                     setIsCorrect(null);
-                } else {
-                    handleSubmitScore();
-                }
-            };
-
-            const handleTryAgain = () => {
-                setShowFeedback(false);
-                setIsCorrect(null);
-                setRecognitionText('');
+                } else handleSubmitScore();
             };
 
             const handleSubmitScore = async () => {
@@ -283,44 +237,45 @@
                 }
             };
 
+            // 核心錄音功能改寫
             const handleStartRecording = () => {
+                // 1. 檢查支援度
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 if (!SpeechRecognition) {
-                    alert("瀏覽器不支援語音辨識。請使用 Chrome 或 iOS Safari。");
+                    alert("手機瀏覽器不支援語音辨識。請確保在 iOS Safari 或 Android Chrome 中開啟網址。");
                     return;
                 }
-                
-                // 停止現有的辨識
-                if (isRecording) return;
 
+                // 2. 如果正在錄音，則停止
+                if (isRecording) {
+                    recognitionRef.current?.stop();
+                    return;
+                }
+
+                // 3. 建立全新實例（這是解決 iOS 失敗的關鍵）
                 const recognition = new SpeechRecognition();
                 recognition.lang = 'en-US';
-                recognition.continuous = false;
                 recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+                recognitionRef.current = recognition;
 
                 recognition.onstart = () => {
                     setIsRecording(true);
                     setRecognitionText('');
                 };
 
-                recognition.onresult = (e) => {
-                    const speech = e.results[0][0].transcript.toLowerCase().replace(/[.,!?;:]/g, "").trim();
+                recognition.onresult = (event) => {
+                    const speech = event.results[0][0].transcript.toLowerCase().trim().replace(/[.,!?;:]/g, "");
                     const target = shuffledQuiz[quizIndex].word.toLowerCase();
                     setRecognitionText(speech);
-                    const ok = (speech.includes(target) || target.includes(speech));
-                    checkResult(ok);
+                    checkResult(speech === target || speech.includes(target) || target.includes(speech));
                 };
 
                 recognition.onerror = (err) => {
-                    console.error("SpeechRecognition Error", err.error);
                     setIsRecording(false);
-                    if (err.error === 'no-speech') {
-                        alert("沒聽到聲音，請再試一次！");
-                    } else if (err.error === 'not-allowed') {
-                        alert("請允許開啟麥克風權限！");
-                    } else {
-                        alert("錄音失敗，請重試。");
-                    }
+                    if (err.error === 'no-speech') alert("沒聽到聲音，請再試一次！");
+                    else if (err.error === 'not-allowed') alert("請允許開啟麥克風權限！");
+                    else alert("錄音失敗：" + err.error + "。建議重新整理頁面。");
                 };
 
                 recognition.onend = () => {
@@ -329,31 +284,26 @@
 
                 try {
                     recognition.start();
-                } catch (e) {
+                } catch(e) {
+                    console.error(e);
                     setIsRecording(false);
                 }
             };
 
             if (view === 'login') {
                 return (
-                    <div className="flex-1 flex items-center justify-center p-6">
-                        <div className="brutal-card-heavy w-full p-10 rounded-[40px] text-center bg-white shadow-xl">
-                            <div className="w-20 h-20 bg-[#FDE047] rounded-full border-4 border-black flex items-center justify-center mx-auto mb-6 shadow-[6px_6px_0px_0px_#000]"><Icons.Zap size={40} /></div>
-                            <h1 className="text-4xl font-black italic tracking-tighter mb-2"><span className="text-[#5D5FEF]">VOCAB</span><span className="text-[#D946EF]">POP</span></h1>
-                            <p className="text-slate-400 font-bold text-sm mb-10 tracking-[0.2em] uppercase">Student Login</p>
+                    <div className="flex-1 flex items-center justify-center p-8">
+                        <div className="brutal-card-heavy w-full p-10 rounded-[45px] text-center bg-white">
+                            <div className="w-24 h-24 bg-[#FDE047] rounded-full border-4 border-black flex items-center justify-center mx-auto mb-8 shadow-[8px_8px_0px_0px_#000]"><Icons.Zap size={48} /></div>
+                            <h1 className="text-5xl font-black italic tracking-tighter mb-4"><span className="text-[#5D5FEF]">VOCAB</span><span className="text-[#D946EF]">POP</span></h1>
+                            <p className="text-slate-400 font-bold text-base mb-12 tracking-[0.2em] uppercase">Student Login</p>
                             <form className="space-y-6 text-left" onSubmit={e => { e.preventDefault(); if(user.name&&user.class&&user.no) setView('learn'); }}>
                                 <div className="flex gap-4">
-                                    <div className="flex-1">
-                                        <label className="block font-black mb-2 text-[14px] uppercase text-slate-500">Class *</label>
-                                        <input className="brutal-input" placeholder="104" value={user.class} onChange={e => setUser({...user, class: e.target.value})} required />
-                                    </div>
-                                    <div className="flex-1">
-                                        <label className="block font-black mb-2 text-[14px] uppercase text-slate-500">No. *</label>
-                                        <input className="brutal-input" placeholder="15" value={user.no} onChange={e => setUser({...user, no: e.target.value})} required />
-                                    </div>
+                                    <div className="flex-1"><label className="block font-black mb-2 text-sm text-slate-500 uppercase">Class *</label><input className="brutal-input" placeholder="104" value={user.class} onChange={e => setUser({...user, class: e.target.value})} required /></div>
+                                    <div className="flex-1"><label className="block font-black mb-2 text-sm text-slate-500 uppercase">No. *</label><input className="brutal-input" placeholder="15" value={user.no} onChange={e => setUser({...user, no: e.target.value})} required /></div>
                                 </div>
-                                <div><label className="block font-black mb-2 text-[14px] uppercase text-slate-500">Name *</label><input className="brutal-input" placeholder="姓名" value={user.name} onChange={e => setUser({...user, name: e.target.value})} required /></div>
-                                <button type="submit" className="w-full py-5 bg-[#5D5FEF] text-white rounded-2xl font-black text-xl brutal-btn flex items-center justify-center gap-3 mt-4">START JOURNEY <Icons.ArrowRight size={24} /></button>
+                                <div><label className="block font-black mb-2 text-sm text-slate-500 uppercase">Name *</label><input className="brutal-input" placeholder="王小明" value={user.name} onChange={e => setUser({...user, name: e.target.value})} required /></div>
+                                <button type="submit" className="w-full py-6 bg-[#5D5FEF] text-white rounded-3xl font-black text-2xl brutal-btn flex items-center justify-center gap-3 mt-4">START <Icons.ArrowRight size={28} /></button>
                             </form>
                         </div>
                     </div>
@@ -361,17 +311,17 @@
             }
 
             const NavHeader = () => (
-                <div className="w-full px-5 pt-4 pb-1 sticky top-0 z-50">
-                    <div className="brutal-card bg-white rounded-3xl p-3 flex justify-between items-center shadow-[6px_6px_0px_0px_#000]">
-                        <div className="flex items-center gap-3">
-                            <Icons.Zap size={24} className="text-yellow-400 fill-current" />
-                            <div className="flex flex-col"><span className="font-black text-lg italic leading-none"><span className="text-[#5D5FEF]">VOCAB</span> <span className="text-[#D946EF]">POP</span></span><span className="text-[11px] text-slate-400 font-bold uppercase mt-1 leading-none">{user.class}班 {user.no}號 {user.name}</span></div>
+                <div className="w-full px-6 pt-6 pb-2 sticky top-0 z-50">
+                    <div className="brutal-card bg-white rounded-[28px] p-4 flex justify-between items-center shadow-[8px_8px_0px_0px_#000]">
+                        <div className="flex items-center gap-4">
+                            <Icons.Zap size={28} className="text-yellow-400 fill-current" />
+                            <div className="flex flex-col"><span className="font-black text-xl italic leading-none text-slate-800">VOCABPOP</span><span className="text-[12px] text-slate-400 font-bold uppercase mt-1">{user.class}-{user.no} {user.name}</span></div>
                         </div>
-                        <div className="bg-black text-white rounded-full px-4 py-1.5 flex items-center gap-2 text-xs font-black"><span className="text-yellow-400">★ LV.1</span><span className="text-slate-500">|</span><span>{user.xp} XP</span></div>
+                        <div className="bg-black text-white rounded-full px-5 py-2 flex items-center gap-2 text-sm font-black"><span className="text-yellow-400">★ 1</span><span>{user.xp} XP</span></div>
                     </div>
-                    <div className="flex gap-3 mt-3 px-1">
-                        <button onClick={() => setView('learn')} className={`flex-1 py-3 brutal-btn rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all ${view === 'learn' ? 'bg-[#A5F3FC] translate-y-0.5 shadow-none' : 'bg-white'}`}><Icons.Book size={18} /> LEARN</button>
-                        <button onClick={() => setView('coach')} className={`flex-1 py-3 brutal-btn rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all ${view === 'coach' ? 'bg-[#F9A8D4] translate-y-0.5 shadow-none' : 'bg-white'}`}><Icons.Coach size={18} /> COACH</button>
+                    <div className="flex gap-4 mt-4 px-1">
+                        <button onClick={() => setView('learn')} className={`flex-1 py-4 brutal-btn rounded-2xl font-black text-base flex items-center justify-center gap-2 ${view === 'learn' ? 'bg-[#A5F3FC] translate-y-1 shadow-none' : 'bg-white'}`}><Icons.Book size={20} /> LEARN</button>
+                        <button onClick={() => setView('coach')} className={`flex-1 py-4 brutal-btn rounded-2xl font-black text-base flex items-center justify-center gap-2 ${view === 'coach' ? 'bg-[#F9A8D4] translate-y-1 shadow-none' : 'bg-white'}`}><Icons.Coach size={20} /> COACH</button>
                     </div>
                 </div>
             );
@@ -379,28 +329,30 @@
             if (view === 'learn') {
                 const w = vocabList[currentWordIdx];
                 return (
-                    <div className="flex-1 flex flex-col pb-6">
+                    <div className="flex-1 flex flex-col pb-8">
                         <NavHeader />
-                        <div className="px-5 mt-2 animate-pop">
-                            <div className="brutal-card-heavy rounded-[40px] overflow-hidden">
-                                <div className="bg-[#5D5FEF] p-5 text-center pattern-dots relative">
-                                    <div className="absolute top-4 left-4 bg-black text-white text-[11px] font-black px-3 py-1 rounded-lg">{w.type}</div>
-                                    <div className="bg-black/20 text-white text-[14px] font-bold px-4 py-1 rounded-full inline-block mb-2 tracking-widest">{w.ipa}</div>
-                                    <h2 className="text-5xl font-black text-white mb-6 tracking-tight leading-none">{w.word}</h2>
+                        <div className="px-6 mt-2 flex-1 animate-pop">
+                            <div className="brutal-card-heavy rounded-[40px] overflow-hidden flex flex-col h-full">
+                                <div className="bg-[#5D5FEF] p-8 text-center pattern-dots relative">
+                                    <div className="absolute top-4 left-4 bg-black text-white text-[12px] font-black px-3 py-1 rounded-lg">{w.type}</div>
+                                    <div className="bg-black/20 text-white text-[14px] font-bold px-4 py-1 rounded-full inline-block mb-3">{w.ipa}</div>
+                                    <h2 className="text-6xl font-black text-white mb-6 tracking-tight">{w.word}</h2>
                                     <div className="flex justify-center gap-3 mb-8">{w.syllables.map((s, i) => <div key={i} className={`syllable-bubble ${i === w.stress ? 'bg-[#FDE047]' : 'bg-white/30 text-white border-white/40'}`}>{s}</div>)}</div>
-                                    <button onClick={() => speak(w.word)} className="w-14 h-14 bg-white rounded-full flex items-center justify-center mx-auto brutal-btn shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"><Icons.Volume2 size={32} /></button>
+                                    <button onClick={() => speak(w.word)} className="w-18 h-18 bg-white rounded-full flex items-center justify-center mx-auto brutal-btn shadow-[6px_6px_0px_0px_#000]"><Icons.Volume2 size={40} /></button>
                                 </div>
-                                <div className="p-6 space-y-4">
+                                <div className="p-8 flex-1 space-y-6 overflow-y-auto">
                                     <div>
-                                        <h3 className="font-black text-[14px] flex items-center gap-2 uppercase tracking-widest mb-1 text-slate-800"><div className="w-2.5 h-2.5 bg-yellow-400 border-2 border-black rounded-full"></div> Meaning</h3>
-                                        <p className="text-slate-600 font-bold text-xl leading-snug border-l-4 border-slate-100 pl-4 py-0.5">{w.meaning}</p>
+                                        <h3 className="font-black text-lg flex items-center gap-2 uppercase text-slate-800 mb-2"><div className="w-3 h-3 bg-yellow-400 border-2 border-black rounded-full"></div> Meaning</h3>
+                                        <p className="text-slate-600 font-bold text-2xl border-l-6 border-slate-100 pl-4">{w.meaning}</p>
                                     </div>
-                                    <div className="bg-emerald-50/50 p-4 rounded-2xl border-2 border-emerald-200"><p className="text-sm font-bold text-slate-700 italic leading-snug">"{w.fillBlank.s.replace('___', w.word)}"</p></div>
-                                    <MiniMatch key={w.word} pairs={w.matchPairs} onWordSpeak={speak} />
-                                    <div className="flex justify-between items-center pt-2">
-                                        <button disabled={currentWordIdx === 0} onClick={() => setCurrentWordIdx(i => i-1)} className="px-6 py-4 brutal-btn bg-slate-100 rounded-2xl font-black text-sm">PREV</button>
-                                        <button onClick={() => setCurrentWordIdx(i => (i+1)%vocabList.length)} className="px-10 py-4 brutal-btn bg-[#FDE047] rounded-2xl font-black text-sm">NEXT</button>
+                                    <div className="bg-emerald-50/50 p-5 rounded-3xl border-2 border-emerald-200"><p className="text-base font-bold text-slate-700 italic">"{w.fillBlank.s.replace('___', w.word)}"</p></div>
+                                    <div className="grid grid-cols-2 gap-3 pb-4">
+                                        {w.matchPairs.flat().map((t, idx) => <div key={idx} className="bg-white border-2 border-pink-200 p-3 rounded-xl text-center text-sm font-black text-pink-500">{t}</div>)}
                                     </div>
+                                </div>
+                                <div className="p-6 pt-0 flex justify-between gap-4">
+                                    <button disabled={currentWordIdx === 0} onClick={() => setCurrentWordIdx(i => i-1)} className="flex-1 py-5 brutal-btn bg-slate-100 rounded-3xl font-black text-lg">PREV</button>
+                                    <button onClick={() => setCurrentWordIdx(i => (i+1)%vocabList.length)} className="flex-1 py-5 brutal-btn bg-[#FDE047] rounded-3xl font-black text-lg">NEXT</button>
                                 </div>
                             </div>
                         </div>
@@ -410,18 +362,18 @@
 
             if (view === 'coach') {
                 return (
-                    <div className="flex-1 flex flex-col overflow-hidden">
+                    <div className="flex-1 flex flex-col">
                         <NavHeader />
-                        <div className="px-5 mt-4 mb-10 space-y-4 flex-1 flex flex-col justify-between animate-pop">
+                        <div className="px-6 mt-6 mb-12 flex-1 flex flex-col justify-between animate-pop">
                             {[
-                                { m: 'speak', t: 'PRO SPEAK', d: '發音挑戰 (隨機 15 題)', c: '#86EFAC', i: <Icons.Mic size={40}/> },
-                                { m: 'spell', t: 'SPELL IT', d: '聽寫挑戰 (15 題)', c: '#93C5FD', i: <Icons.Keyboard size={40}/> },
-                                { m: 'fill', t: 'FILL IN', d: '例句克漏字 (15 題)', c: '#FDBA74', i: <Icons.Pen size={40}/> }
+                                { m: 'speak', t: 'PRO SPEAK', d: '發音挑戰 (隨機 15 題)', c: '#86EFAC', i: <Icons.Mic size={45}/> },
+                                { m: 'spell', t: 'SPELL IT', d: '單字聽寫挑戰 (15 題)', c: '#93C5FD', i: <Icons.Keyboard size={45}/> },
+                                { m: 'fill', t: 'FILL IN', d: '例句搭配克漏字 (15 題)', c: '#FDBA74', i: <Icons.Pen size={45}/> }
                             ].map((b, i) => (
-                                <button key={i} onClick={() => startQuiz(b.m)} className="flex-1 brutal-card-heavy p-6 flex items-center gap-6 rounded-[32px] min-h-[100px]" style={{backgroundColor: b.c}}>
-                                    <div className="bg-white p-4 rounded-2xl border-[3px] border-black shadow-[4px_4px_0px_0px_#000]">{b.i}</div>
-                                    <div className="text-left leading-tight"><div className="font-black text-2xl mb-1">{b.t}</div><div className="text-[12px] font-bold opacity-70 uppercase tracking-tight">{b.d}</div></div>
-                                    <Icons.ArrowRight size={28} className="ml-auto opacity-30" />
+                                <button key={i} onClick={() => startQuiz(b.m)} className="flex-1 brutal-card-heavy p-6 flex items-center gap-8 rounded-[40px] min-h-[110px]" style={{backgroundColor: b.c}}>
+                                    <div className="bg-white p-5 rounded-3xl border-4 border-black shadow-[6px_6px_0px_0px_#000]">{b.i}</div>
+                                    <div className="text-left"><div className="font-black text-3xl mb-1 text-black tracking-tight">{b.t}</div><div className="text-sm font-bold opacity-70 uppercase">{b.d}</div></div>
+                                    <Icons.ArrowRight size={32} className="ml-auto opacity-30 text-black" />
                                 </button>
                             ))}
                         </div>
@@ -433,34 +385,36 @@
                 const cur = shuffledQuiz[quizIndex];
                 return (
                     <div className="flex-1 flex flex-col p-6 animate-pop overflow-hidden">
-                        <div className="flex justify-between items-center mb-4">
-                            <button onClick={() => setView('coach')} className="px-4 py-2 brutal-btn bg-white rounded-xl flex items-center gap-2 text-xs font-black shadow-[4px_4px_0px_0px_#000]"><Icons.RotateCcw size={18}/> EXIT</button>
-                            <div className="font-black text-sm bg-black text-white px-5 py-2 rounded-full tracking-widest">{quizIndex + 1} / {shuffledQuiz.length}</div>
+                        <div className="flex justify-between items-center mb-6">
+                            <button onClick={() => setView('coach')} className="px-5 py-3 brutal-btn bg-white rounded-2xl flex items-center gap-2 text-sm font-black shadow-[6px_6px_0px_0px_#000]"><Icons.RotateCcw size={20}/> EXIT</button>
+                            <div className="font-black text-lg bg-black text-white px-6 py-2 rounded-full">{quizIndex + 1} / {shuffledQuiz.length}</div>
                         </div>
-                        <div className="brutal-card-heavy rounded-[40px] p-8 flex-1 flex flex-col justify-center items-center relative min-h-[320px] mb-8">
-                            {quizMode === 'spell' && <div className="w-full text-center"><button onClick={() => speak(cur.word)} className="w-20 h-20 bg-[#A5F3FC] rounded-full brutal-btn flex items-center justify-center mb-10 mx-auto shadow-[6px_6px_0px_0px_#000]"><Icons.Volume2 size={40}/></button><p className="text-slate-800 font-bold text-xl leading-relaxed mb-10 px-4 font-black">"{cur.meaning}"</p><input autoFocus className="underline-input" placeholder="Type here..." value={userInput} onChange={e => setUserInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && userInput && checkResult()}/></div>}
-                            {quizMode === 'fill' && <div className="text-left w-full"><p className="text-2xl font-black leading-relaxed mb-8 px-2 text-slate-800">{cur.fillBlank.s.split('___')[0]}<span className="text-[#5D5FEF] border-b-4 border-black px-1 mx-1 underline underline-offset-8">{userInput || '____'}</span>{cur.fillBlank.s.split('___')[1]}</p><p className="text-sm text-slate-400 mb-10 italic border-l-4 pl-4 leading-relaxed font-bold">{cur.fillBlank.t}</p><input autoFocus className="underline-input" placeholder="Fill in..." value={userInput} onChange={e => setUserInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && userInput && checkResult()}/></div>}
-                            {quizMode === 'speak' && <div className="w-full text-center animate-pop"><h2 className="text-6xl font-black mb-4 tracking-tighter text-slate-900 leading-none">{cur.word}</h2><div className="bg-black/5 px-6 py-2 rounded-xl text-slate-400 text-sm font-black mb-10 italic tracking-widest">{cur.ipa}</div><div className="flex gap-3 justify-center mb-10">{cur.syllables.map((s, i) => <div key={i} className={`syllable-bubble border-[4px] ${i === cur.stress ? 'bg-[#FDE047]' : 'bg-white'}`}>{s}</div>)}</div>{recognitionText && <p className="text-blue-500 font-black text-lg animate-bounce tracking-tight">聽到: "{recognitionText}"</p>}</div>}
+                        
+                        <div className="brutal-card-heavy rounded-[45px] p-8 flex-1 flex flex-col justify-center items-center relative min-h-[350px] mb-10">
+                            {quizMode === 'spell' && <div className="w-full text-center"><button onClick={() => speak(cur.word)} className="w-24 h-24 bg-[#A5F3FC] rounded-full brutal-btn flex items-center justify-center mb-10 mx-auto shadow-[8px_8px_0px_0px_#000]"><Icons.Volume2 size={48}/></button><p className="text-slate-800 font-black text-2xl mb-12">"{cur.meaning}"</p><input autoFocus className="underline-input" placeholder="Type word..." value={userInput} onChange={e => setUserInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && userInput && checkResult()}/></div>}
+                            {quizMode === 'fill' && <div className="text-left w-full"><p className="text-3xl font-black leading-snug mb-10 text-slate-800">{cur.fillBlank.s.split('___')[0]}<span className="text-[#5D5FEF] border-b-6 border-black px-2 mx-1">{userInput || '____'}</span>{cur.fillBlank.s.split('___')[1]}</p><p className="text-lg text-slate-400 mb-12 italic border-l-6 pl-4 leading-relaxed font-bold">{cur.fillBlank.t}</p><input autoFocus className="underline-input" placeholder="Fill answer..." value={userInput} onChange={e => setUserInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && userInput && checkResult()}/></div>}
+                            {quizMode === 'speak' && <div className="w-full text-center animate-pop"><h2 className="text-7xl font-black mb-4 tracking-tighter text-slate-900 leading-none">{cur.word}</h2><div className="bg-black/5 px-8 py-3 rounded-2xl text-slate-400 text-lg font-black mb-12 italic">{cur.ipa}</div><div className="flex gap-4 justify-center mb-12">{cur.syllables.map((s, i) => <div key={i} className={`syllable-bubble border-4 ${i === cur.stress ? 'bg-[#FDE047]' : 'bg-white'}`}>{s}</div>)}</div>{recognitionText && <p className="text-blue-500 font-black text-xl animate-bounce">Hear: "{recognitionText}"</p>}</div>}
                             
-                            {showFeedback && <div className={`absolute -bottom-6 left-1/2 -translate-x-1/2 p-6 rounded-2xl border-[4px] border-black font-black w-[85%] text-center text-lg shadow-[8px_8px_0px_0px_#000] z-20 ${isCorrect ? 'bg-[#86EFAC]' : 'bg-[#FCA5A5]'}`}>{isCorrect ? '✨ CORRECT!' : (quizMode === 'speak' ? '❌ TRY AGAIN?' : `❌ ANS: ${quizMode === 'spell' ? cur.word : cur.fillBlank.a}`)}</div>}
+                            {showFeedback && <div className={`absolute -bottom-8 left-1/2 -translate-x-1/2 p-8 rounded-3xl border-6 border-black font-black w-[90%] text-center text-2xl shadow-[10px_10px_0px_0px_#000] z-50 ${isCorrect ? 'bg-[#86EFAC]' : 'bg-[#FCA5A5]'}`}>{isCorrect ? '✨ CORRECT!' : (quizMode === 'speak' ? '❌ TRY AGAIN?' : `❌ ANS: ${cur.word}`)}</div>}
                         </div>
+
                         {quizMode === 'speak' && (
                             <div className="flex flex-col items-center pb-12">
                                 {!showFeedback || isCorrect ? (
                                     <>
-                                        <button onClick={handleStartRecording} className={`w-28 h-28 rounded-full brutal-btn flex items-center justify-center mb-6 transition-all ${isRecording ? 'mic-recording bg-red-500' : 'bg-[#FDE047] shadow-[6px_6px_0px_0px_#000]'}`}><Icons.Mic size={54} className={isRecording ? 'text-white' : ''} /></button>
-                                        <div className="bg-white border-4 border-black px-10 py-3 rounded-full font-black text-sm uppercase tracking-[0.3em] shadow-[4px_4px_0px_0px_#000]">{isRecording ? 'Listening...' : 'Tap to Record'}</div>
+                                        <button onClick={handleStartRecording} className={`w-32 h-32 rounded-full brutal-btn flex items-center justify-center mb-8 transition-all ${isRecording ? 'mic-recording' : 'bg-[#FDE047] shadow-[10px_10px_0px_0px_#000]'}`}><Icons.Mic size={64} className={isRecording ? 'text-white' : 'text-black'} /></button>
+                                        <div className="bg-white border-4 border-black px-12 py-4 rounded-full font-black text-lg uppercase tracking-[0.3em] shadow-[6px_6px_0px_0px_#000]">{isRecording ? 'Listening...' : 'Tap to Record'}</div>
                                     </>
                                 ) : (
-                                    <div className="flex gap-4 w-full px-2 animate-pop">
-                                        <button onClick={handleTryAgain} className="flex-1 py-5 bg-[#FDE047] rounded-2xl brutal-btn font-black text-xl flex items-center justify-center gap-3"><Icons.RotateCcw size={22}/> TRY AGAIN</button>
-                                        <button onClick={handleNext} className="flex-1 py-5 bg-white rounded-2xl brutal-btn font-black text-xl flex items-center justify-center gap-3 text-slate-500">SKIP <Icons.ArrowRight size={22}/></button>
+                                    <div className="flex gap-6 w-full px-4 animate-pop">
+                                        <button onClick={() => { setShowFeedback(false); setIsCorrect(null); setRecognitionText(''); }} className="flex-1 py-6 bg-[#FDE047] rounded-3xl brutal-btn font-black text-xl flex items-center justify-center gap-3"><Icons.RotateCcw size={28}/> TRY AGAIN</button>
+                                        <button onClick={handleNext} className="flex-1 py-6 bg-white rounded-3xl brutal-btn font-black text-xl flex items-center justify-center gap-3 text-slate-500">SKIP <Icons.ArrowRight size={28}/></button>
                                     </div>
                                 )}
                             </div>
                         )}
                         {!showFeedback && quizMode !== 'speak' && (
-                            <button onClick={() => checkResult()} disabled={!userInput} className="w-full py-5 bg-black text-white rounded-2xl font-black text-xl brutal-btn shadow-[8px_8px_0px_0px_#000] mb-10 disabled:opacity-40 uppercase tracking-widest">CHECK ANSWER</button>
+                            <button onClick={() => checkResult()} disabled={!userInput} className="w-full py-6 bg-black text-white rounded-[32px] font-black text-3xl brutal-btn shadow-[10px_10px_0px_0px_#000] mb-12">CHECK <Icons.ArrowRight size={36} /></button>
                         )}
                     </div>
                 );
@@ -469,12 +423,12 @@
             if (view === 'result') {
                 return (
                     <div className="flex-1 flex items-center justify-center p-10 text-center animate-pop">
-                        <div className="brutal-card-heavy w-full p-12 rounded-[50px] bg-white border-b-[12px] shadow-2xl">
-                            <div className="w-24 h-24 bg-[#FDE047] rounded-3xl border-4 border-black flex items-center justify-center mx-auto mb-8 rotate-6 shadow-[10px_10px_0px_0px_#000]"><Icons.Zap size={54} /></div>
-                            <h2 className="text-3xl font-black mb-2 italic uppercase tracking-tighter">Challenge Done!</h2>
-                            <p className="text-slate-400 font-bold text-xs mb-10 uppercase tracking-widest">{user.name}'s SCORE</p>
-                            <div className="text-[120px] font-black text-[#5D5FEF] mb-14 tracking-tighter leading-none">{Math.round((score/15)*100)}<span className="text-3xl text-slate-300 ml-2 font-black">pts</span></div>
-                            {submitting ? <p className="text-slate-400 font-black animate-pulse mb-8 tracking-widest">SAVING SCORE...</p> : <button onClick={() => setView('coach')} className="w-full py-6 bg-black text-white rounded-[32px] font-black text-2xl brutal-btn shadow-[10px_10px_0px_0px_#000] uppercase tracking-widest">BACK TO COACH</button>}
+                        <div className="brutal-card-heavy w-full p-12 rounded-[60px] bg-white border-b-[15px]">
+                            <div className="w-28 h-28 bg-[#FDE047] rounded-[40px] border-4 border-black flex items-center justify-center mx-auto mb-10 rotate-6 shadow-[12px_12px_0px_0px_#000]"><Icons.Zap size={64} /></div>
+                            <h2 className="text-4xl font-black mb-4 italic uppercase tracking-tighter text-black">DONE!</h2>
+                            <p className="text-slate-400 font-bold text-lg mb-12 uppercase tracking-[0.3em]">{user.name}</p>
+                            <div className="text-[140px] font-black text-[#5D5FEF] mb-16 tracking-tighter leading-none">{Math.round((score/15)*100)}<span className="text-4xl text-slate-300 ml-2">pts</span></div>
+                            <button onClick={() => setView('coach')} className="w-full py-8 bg-black text-white rounded-[40px] font-black text-3xl brutal-btn shadow-[12px_12px_0px_0px_#000] uppercase tracking-widest">BACK TO COACH</button>
                         </div>
                     </div>
                 );
