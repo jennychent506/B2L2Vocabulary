@@ -34,7 +34,7 @@
             position: relative;
         }
 
-        .brutal-card-heavy {
+        .brital-card-heavy {
             background: white;
             border: 5px solid #000;
             box-shadow: 12px 12px 0px 0px #000;
@@ -123,6 +123,7 @@
     <script type="text/babel">
         const { useState, useEffect, useMemo, useRef } = React;
 
+        // ⚠️ 已填入您的 Google Apps Script 部署網址
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQVDLuSQnV3bYPyfStwsPUY8UQrePglY3476At9p4SCcXUcIJOZutv7-6OVPXyFVu7/exec"; 
 
         const Icons = {
@@ -170,7 +171,6 @@
             const [recognitionText, setRecognitionText] = useState('');
             const [submitting, setSubmitting] = useState(false);
 
-            // 用於儲存辨識實例的 Ref，方便隨時停止
             const recognitionRef = useRef(null);
 
             const speak = (text) => {
@@ -226,33 +226,36 @@
                 if (GOOGLE_SCRIPT_URL) {
                     setSubmitting(true);
                     try {
+                        // ✨ 這次傳送加入了 mode 欄位
                         await fetch(GOOGLE_SCRIPT_URL, {
                             method: 'POST',
                             mode: 'no-cors',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ name: user.name, class: user.class, no: user.no, score: finalPerc })
+                            body: JSON.stringify({ 
+                                name: user.name, 
+                                class: user.class, 
+                                no: user.no, 
+                                score: finalPerc,
+                                mode: quizMode.toUpperCase() // 這裡是測驗類型
+                            })
                         });
                     } catch (e) {}
                     setSubmitting(false);
                 }
             };
 
-            // 核心錄音功能改寫
             const handleStartRecording = () => {
-                // 1. 檢查支援度
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 if (!SpeechRecognition) {
                     alert("手機瀏覽器不支援語音辨識。請確保在 iOS Safari 或 Android Chrome 中開啟網址。");
                     return;
                 }
 
-                // 2. 如果正在錄音，則停止
                 if (isRecording) {
                     recognitionRef.current?.stop();
                     return;
                 }
 
-                // 3. 建立全新實例（這是解決 iOS 失敗的關鍵）
                 const recognition = new SpeechRecognition();
                 recognition.lang = 'en-US';
                 recognition.interimResults = false;
@@ -293,7 +296,7 @@
             if (view === 'login') {
                 return (
                     <div className="flex-1 flex items-center justify-center p-8">
-                        <div className="brutal-card-heavy w-full p-10 rounded-[45px] text-center bg-white">
+                        <div className="brutal-card-heavy w-full p-10 rounded-[45px] text-center bg-white shadow-2xl">
                             <div className="w-24 h-24 bg-[#FDE047] rounded-full border-4 border-black flex items-center justify-center mx-auto mb-8 shadow-[8px_8px_0px_0px_#000]"><Icons.Zap size={48} /></div>
                             <h1 className="text-5xl font-black italic tracking-tighter mb-4"><span className="text-[#5D5FEF]">VOCAB</span><span className="text-[#D946EF]">POP</span></h1>
                             <p className="text-slate-400 font-bold text-base mb-12 tracking-[0.2em] uppercase">Student Login</p>
@@ -346,9 +349,6 @@
                                         <p className="text-slate-600 font-bold text-2xl border-l-6 border-slate-100 pl-4">{w.meaning}</p>
                                     </div>
                                     <div className="bg-emerald-50/50 p-5 rounded-3xl border-2 border-emerald-200"><p className="text-base font-bold text-slate-700 italic">"{w.fillBlank.s.replace('___', w.word)}"</p></div>
-                                    <div className="grid grid-cols-2 gap-3 pb-4">
-                                        {w.matchPairs.flat().map((t, idx) => <div key={idx} className="bg-white border-2 border-pink-200 p-3 rounded-xl text-center text-sm font-black text-pink-500">{t}</div>)}
-                                    </div>
                                 </div>
                                 <div className="p-6 pt-0 flex justify-between gap-4">
                                     <button disabled={currentWordIdx === 0} onClick={() => setCurrentWordIdx(i => i-1)} className="flex-1 py-5 brutal-btn bg-slate-100 rounded-3xl font-black text-lg">PREV</button>
@@ -424,7 +424,7 @@
                 return (
                     <div className="flex-1 flex items-center justify-center p-10 text-center animate-pop">
                         <div className="brutal-card-heavy w-full p-12 rounded-[60px] bg-white border-b-[15px]">
-                            <div className="w-28 h-28 bg-[#FDE047] rounded-[40px] border-4 border-black flex items-center justify-center mx-auto mb-10 rotate-6 shadow-[12px_12px_0px_0px_#000]"><Icons.Zap size={64} /></div>
+                            <div className="w-24 h-24 bg-[#FDE047] rounded-[40px] border-4 border-black flex items-center justify-center mx-auto mb-10 rotate-6 shadow-[12px_12px_0px_0px_#000]"><Icons.Zap size={64} /></div>
                             <h2 className="text-4xl font-black mb-4 italic uppercase tracking-tighter text-black">DONE!</h2>
                             <p className="text-slate-400 font-bold text-lg mb-12 uppercase tracking-[0.3em]">{user.name}</p>
                             <div className="text-[140px] font-black text-[#5D5FEF] mb-16 tracking-tighter leading-none">{Math.round((score/15)*100)}<span className="text-4xl text-slate-300 ml-2">pts</span></div>
