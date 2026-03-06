@@ -16,17 +16,19 @@
             background: linear-gradient(180deg, #FFF9E6 0%, #FFD1D1 100%);
             margin: 0;
             padding: 0;
-            overflow: hidden; 
+            /* 修改：允許垂直捲動，防止按鈕被裁切 */
+            overflow-y: auto;
+            overflow-x: hidden; 
             display: flex;
             justify-content: center;
             min-height: 100vh;
+            -webkit-overflow-scrolling: touch;
         }
 
         #root {
             width: 100%;
             max-width: 480px;
-            height: 100vh;
-            height: 100dvh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             background: transparent;
@@ -35,7 +37,7 @@
 
         .brutal-card-heavy {
             background: white;
-            border: 4px solid #000;
+            border: 5px solid #000;
             box-shadow: 10px 10px 0px 0px #000;
         }
 
@@ -266,7 +268,7 @@
                     <div className="flex-1 flex items-center justify-center p-6">
                         <div className="brutal-card-heavy w-full p-8 rounded-[40px] text-center bg-white shadow-xl animate-pop">
                             <div className="w-20 h-20 bg-[#FDE047] rounded-full border-4 border-black flex items-center justify-center mx-auto mb-6 shadow-[6px_6px_0px_0px_#000]"><Icons.Zap size={40} /></div>
-                            <h1 className="text-4xl font-black italic tracking-tighter mb-1"><span className="text-[#5D5FEF]">VOCAB</span><span className="text-[#D946EF]">POP</span></h1>
+                            <h1 className="text-4xl font-black italic tracking-tighter mb-1 leading-none"><span className="text-[#5D5FEF]">VOCAB</span><span className="text-[#D946EF]">POP</span></h1>
                             <p className="text-slate-400 font-bold text-sm mb-10 tracking-[0.2em] uppercase">Student Login</p>
                             <form className="space-y-6 text-left" onSubmit={e => { e.preventDefault(); if(user.name&&user.class&&user.no) setView('learn'); }}>
                                 <div className="flex gap-4">
@@ -295,7 +297,7 @@
                     <div className="brutal-card bg-white rounded-3xl p-3 flex justify-between items-center shadow-[6px_6px_0px_0px_#000]">
                         <div className="flex items-center gap-3">
                             <Icons.Zap size={22} className="text-yellow-400 fill-current" />
-                            <div className="flex flex-col"><span className="font-black text-base italic leading-none text-slate-800 tracking-tighter">VOCABPOP</span><span className="text-[10px] text-slate-400 font-bold uppercase mt-1">{user.class}班 {user.no}號 {user.name}</span></div>
+                            <div className="flex flex-col"><span className="font-black text-base italic leading-none text-slate-800 tracking-tighter">VOCABPOP</span><span className="text-[10px] text-slate-400 font-bold uppercase mt-1 leading-none">{user.class}班 {user.no}號 {user.name}</span></div>
                         </div>
                         <div className="bg-black text-white rounded-full px-4 py-1.5 flex items-center gap-2 text-xs font-black tracking-tighter">
                             <span className="text-yellow-400">★ LV.1</span> <span className="text-slate-500">|</span> <span>{user.xp} XP</span>
@@ -311,30 +313,30 @@
             if (view === 'learn') {
                 const w = vocabBank[currentWordIdx];
                 return (
-                    <div className="flex-1 flex flex-col pb-8">
+                    <div className="flex-1 flex flex-col pb-10">
                         <NavHeader />
-                        <div className="px-5 mt-2 flex-1 animate-pop">
-                            <div className="brutal-card-heavy rounded-[40px] overflow-hidden flex flex-col h-full bg-white">
+                        <div className="px-5 mt-2 animate-pop">
+                            <div className="brutal-card-heavy rounded-[40px] overflow-hidden flex flex-col bg-white">
                                 <div className="bg-[#5D5FEF] p-6 text-center pattern-dots relative">
-                                    <div className="absolute top-4 left-4 bg-black text-white text-[10px] font-black px-3 py-1 rounded-lg italic tracking-widest">{w.type}</div>
-                                    <div className="bg-black/20 text-white text-[12px] font-bold px-4 py-1 rounded-full inline-block mb-3">{w.ipa}</div>
-                                    <h2 className="text-5xl font-black text-white mb-6 tracking-tight">{w.word}</h2>
+                                    <div className="absolute top-4 left-4 bg-black text-white text-[10px] font-black px-3 py-1 rounded-lg italic tracking-widest leading-none">{w.type}</div>
+                                    <div className="bg-black/20 text-white text-[12px] font-bold px-4 py-1 rounded-full inline-block mb-3 leading-none">{w.ipa}</div>
+                                    <h2 className="text-5xl font-black text-white mb-6 tracking-tight leading-none">{w.word}</h2>
                                     <div className="flex justify-center gap-3 mb-6">
                                         {w.syllables.map((s, i) => <div key={i} className={`syllable-bubble ${i === w.stress ? 'bg-[#FDE047]' : 'bg-white/30 text-white border-white/40'}`}>{s}</div>)}
                                     </div>
                                     <button onClick={() => speak(w.word)} className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto brutal-btn shadow-[5px_5px_0px_0px_#000]"><Icons.Volume2 size={32} /></button>
                                 </div>
-                                <div className="p-8 flex-1 space-y-6 overflow-y-auto">
+                                <div className="p-8 space-y-6">
                                     <div>
                                         <h3 className="font-black text-sm flex items-center gap-2 uppercase text-slate-800 mb-2 tracking-widest"><div className="w-2.5 h-2.5 bg-yellow-400 border-2 border-black rounded-full"></div> Meaning</h3>
-                                        <p className="text-slate-600 font-bold text-xl border-l-4 border-slate-100 pl-4 leading-relaxed">{w.meaning}</p>
+                                        <p className="text-slate-600 font-bold text-xl border-l-4 border-slate-100 pl-4 leading-snug">{w.meaning}</p>
                                     </div>
                                     <div className="bg-emerald-50/50 p-5 rounded-2xl border-2 border-emerald-100 italic"><p className="text-base font-bold text-slate-700">"{w.s.replace('___', w.word)}"</p></div>
                                     <div className="bg-blue-50/50 p-4 rounded-xl border-2 border-blue-100"><h4 className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">🔗 Word Family:</h4><p className="text-sm font-black text-slate-700">{w.family}</p></div>
                                 </div>
                                 <div className="p-6 pt-0 flex justify-between gap-4">
                                     <button disabled={currentWordIdx === 0} onClick={() => setCurrentWordIdx(i => i-1)} className="flex-1 py-4 brutal-btn bg-slate-100 rounded-3xl font-black text-sm">PREV</button>
-                                    <button onClick={() => setCurrentWordIdx(i => (i+1)%vocabBank.length)} className="flex-1 py-4 brutal-btn bg-[#FDE047] rounded-3xl font-black text-sm">NEXT</button>
+                                    <button onClick={() => setCurrentWordIdx(i => (i+1)%vocabBank.length)} className="flex-1 py-4 brutal-btn bg-[#FDE047] rounded-3xl font-black text-sm uppercase">NEXT</button>
                                 </div>
                             </div>
                         </div>
@@ -344,7 +346,7 @@
 
             if (view === 'coach') {
                 return (
-                    <div className="flex-1 flex flex-col h-full overflow-hidden">
+                    <div className="flex-1 flex flex-col h-full">
                         <NavHeader />
                         <div className="px-5 mt-4 mb-8 flex-1 flex flex-col justify-between animate-pop space-y-3">
                             {[
@@ -352,11 +354,11 @@
                                 { m: 'spell', t: 'SPELL IT', d: '聽寫挑戰 (隨機 15 題)', c: '#93C5FD', i: <Icons.Keyboard size={32}/> },
                                 { m: 'fill', t: 'FILL IN', d: '搭配克漏字 (隨機 15 題)', c: '#FDBA74', i: <Icons.Pen size={32}/> }
                             ].map((b, i) => (
-                                <button key={i} onClick={() => startQuiz(b.m)} className="flex-1 brutal-card-heavy p-5 flex items-center gap-6 rounded-3xl min-h-[90px]" style={{backgroundColor: b.c}}>
+                                <button key={i} onClick={() => startQuiz(b.m)} className="flex-1 brutal-card-heavy p-4 flex items-center gap-6 rounded-3xl min-h-[90px]" style={{backgroundColor: b.c}}>
                                     <div className="bg-white p-4 rounded-2xl border-[3px] border-black shadow-[4px_4px_0px_0px_#000]">{b.i}</div>
-                                    <div className="text-left leading-tight">
+                                    <div className="text-left leading-none">
                                         <div className="font-black text-2xl mb-1 text-black tracking-tighter">{b.t}</div>
-                                        <div className="text-[11px] font-bold opacity-70 uppercase tracking-tight">{b.d}</div>
+                                        <div className="text-[11px] font-bold opacity-70 uppercase tracking-tight leading-none mt-1">{b.d}</div>
                                     </div>
                                 </button>
                             ))}
@@ -368,7 +370,7 @@
             if (view === 'quiz') {
                 const cur = shuffledQuiz[quizIndex];
                 return (
-                    <div className="flex-1 flex flex-col p-6 animate-pop overflow-hidden h-full">
+                    <div className="flex-1 flex flex-col p-6 animate-pop h-full pb-10">
                         <div className="flex justify-between items-center mb-5">
                             <button onClick={() => setView('coach')} className="px-4 py-2 brutal-btn bg-white rounded-xl flex items-center gap-2 text-xs font-black shadow-[4px_4px_0px_0px_#000]"><Icons.RotateCcw size={16}/> EXIT</button>
                             <div className="font-black text-sm bg-black text-white px-5 py-2 rounded-full text-center tracking-tighter">{quizIndex + 1} / 15</div>
@@ -380,23 +382,23 @@
                                     <button onClick={() => speak(cur.word)} className="w-20 h-20 bg-[#A5F3FC] rounded-full brutal-btn flex items-center justify-center mb-8 mx-auto shadow-[6px_6px_0px_0px_#000]"><Icons.Volume2 size={40}/></button>
                                     <div className="mb-8 flex justify-center items-center gap-3">
                                         <span className="bg-black text-white px-3 py-1 rounded-lg text-sm font-black uppercase italic tracking-widest">{cur.type}</span>
-                                        <span className="text-slate-800 font-black text-2xl inline">"{cur.meaning}"</span>
+                                        <span className="text-slate-800 font-black text-2xl inline leading-tight">"{cur.meaning}"</span>
                                     </div>
-                                    <input autoFocus className="underline-input" placeholder="Type word..." value={userInput} onChange={e => setUserInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && userInput && checkResult()}/>
+                                    <input autoFocus className="underline-input" placeholder="Type here..." value={userInput} onChange={e => setUserInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && userInput && checkResult()}/>
                                 </div>
                             )}
-                            {quizMode === 'fill' && <div className="text-left w-full"><p className="text-3xl font-black leading-snug mb-8 text-slate-800">{cur.s.split('___')[0]}<span className="text-[#5D5FEF] border-b-6 border-black px-2 mx-1 italic underline underline-offset-8">{userInput || '____'}</span>{cur.s.split('___')[1]}</p><p className="text-base text-slate-400 mb-10 italic border-l-4 pl-4 leading-relaxed font-bold tracking-tight">{cur.t}</p><input autoFocus className="underline-input" placeholder="Fill in..." value={userInput} onChange={e => setUserInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && userInput && checkResult()}/></div>}
+                            {quizMode === 'fill' && <div className="text-left w-full"><p className="text-3xl font-black leading-snug mb-8 text-slate-800">{cur.s.split('___')[0]}<span className="text-[#5D5FEF] border-b-6 border-black px-2 mx-1 italic underline underline-offset-8 leading-none">{userInput || '____'}</span>{cur.s.split('___')[1]}</p><p className="text-base text-slate-400 mb-10 italic border-l-4 pl-4 leading-relaxed font-bold tracking-tight">{cur.t}</p><input autoFocus className="underline-input" placeholder="Fill in..." value={userInput} onChange={e => setUserInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && userInput && checkResult()}/></div>}
                             {quizMode === 'speak' && <div className="w-full text-center animate-pop"><h2 className="text-7xl font-black mb-4 tracking-tighter text-slate-900 leading-none">{cur.word}</h2><div className="bg-black/5 px-6 py-2 rounded-xl text-slate-400 text-base font-black mb-10 italic tracking-tighter">{cur.ipa}</div>{recognitionText && <p className="text-blue-500 font-black text-xl animate-bounce tracking-tight">聽到: "{recognitionText}"</p>}</div>}
                             
                             {showFeedback && <div className={`absolute -bottom-8 left-1/2 -translate-x-1/2 p-6 rounded-3xl border-6 border-black font-black w-[85%] text-center text-xl shadow-[8px_8px_0px_0px_#000] z-50 animate-pop ${isCorrect ? 'bg-[#86EFAC]' : 'bg-[#FCA5A5]'}`}>{isCorrect ? '✨ CORRECT!' : (quizMode === 'speak' ? '❌ TRY AGAIN?' : `❌ ANS: ${cur.a || cur.word}`)}</div>}
                         </div>
 
                         {quizMode === 'speak' && (
-                            <div className="flex flex-col items-center pb-10 text-center w-full">
+                            <div className="flex flex-col items-center pb-6 text-center w-full">
                                 {!showFeedback || isCorrect ? (
                                     <>
-                                        <button onClick={handleStartRecording} className={`w-32 h-32 rounded-full brutal-btn flex items-center justify-center mb-6 transition-all ${isRecording ? 'mic-recording' : 'bg-[#FDE047] shadow-[8px_8px_0px_0px_#000]'}`}><Icons.Mic size={64} className={isRecording ? 'text-white' : 'text-black'} /></button>
-                                        <div className="bg-white border-4 border-black px-10 py-3 rounded-full font-black text-sm uppercase tracking-[0.3em] shadow-[4px_4px_0px_0px_#000]">{isRecording ? 'Listening...' : 'Tap to Record'}</div>
+                                        <button onClick={handleStartRecording} className={`w-32 h-32 rounded-full brutal-btn flex items-center justify-center mb-6 transition-all ${isRecording ? 'mic-recording' : 'bg-[#FDE047] shadow-[10px_10px_0px_0px_#000]'}`}><Icons.Mic size={64} className={isRecording ? 'text-white' : 'text-black'} /></button>
+                                        <div className="bg-white border-4 border-black px-10 py-3 rounded-full font-black text-sm uppercase tracking-[0.3em] shadow-[4px_4px_0px_0px_#000] mx-auto">{isRecording ? 'Listening...' : 'Tap to Record'}</div>
                                     </>
                                 ) : (
                                     <div className="flex gap-4 w-full px-2 animate-pop">
@@ -415,9 +417,9 @@
 
             if (view === 'result') {
                 return (
-                    <div className="flex-1 flex items-center justify-center p-10 text-center animate-pop h-full">
-                        <div className="brutal-card-heavy w-full p-12 rounded-[50px] bg-white border-b-[15px] shadow-2xl">
-                            <div className="w-28 h-28 bg-[#FDE047] rounded-[40px] border-4 border-black flex items-center justify-center mx-auto mb-8 rotate-6 shadow-[10px_10px_0px_0px_#000]"><Icons.Zap size={60} /></div>
+                    <div className="flex-1 flex items-center justify-center p-10 text-center animate-pop h-full pb-20">
+                        <div className="brutal-card-heavy w-full p-12 rounded-[60px] bg-white border-b-[15px] shadow-2xl">
+                            <div className="w-28 h-28 bg-[#FDE047] rounded-[40px] border-4 border-black flex items-center justify-center mx-auto mb-8 shadow-[10px_10px_0px_0px_#000] rotate-6"><Icons.Zap size={60} /></div>
                             <h2 className="text-4xl font-black mb-4 italic uppercase tracking-tighter text-black">DONE!</h2>
                             <p className="text-slate-400 font-bold text-lg mb-10 uppercase tracking-[0.3em]">{user.name}</p>
                             <div className="text-[120px] font-black text-[#5D5FEF] mb-14 tracking-tighter leading-none text-center w-full">{Math.round((score/15)*100)}<span className="text-4xl text-slate-300 ml-2 font-black">pts</span></div>
