@@ -16,9 +16,8 @@
             background: linear-gradient(180deg, #FFF9E6 0%, #FFD1D1 100%);
             margin: 0;
             padding: 0;
-            /* 修改：允許垂直捲動，防止按鈕被裁切 */
-            overflow-y: auto;
             overflow-x: hidden; 
+            overflow-y: auto; /* 允許垂直捲動 */
             display: flex;
             justify-content: center;
             min-height: 100vh;
@@ -37,8 +36,8 @@
 
         .brutal-card-heavy {
             background: white;
-            border: 5px solid #000;
-            box-shadow: 10px 10px 0px 0px #000;
+            border: 4px solid #000;
+            box-shadow: 8px 8px 0px 0px #000;
         }
 
         .brutal-btn {
@@ -61,7 +60,7 @@
             font-weight: 800;
             width: 100%;
             background: white;
-            font-size: 20px;
+            font-size: 18px;
         }
 
         .underline-input {
@@ -70,7 +69,7 @@
             background: #F8FAFC;
             padding: 14px;
             width: 100%;
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 900;
             text-align: center;
             outline: none;
@@ -81,7 +80,7 @@
             padding: 4px 12px;
             border-radius: 10px;
             font-weight: 900;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .mic-recording {
@@ -218,7 +217,9 @@
                     setRecognitionText('');
                     setShowFeedback(false);
                     setIsCorrect(null);
-                } else handleSubmitScore();
+                } else {
+                    handleSubmitScore();
+                }
             };
 
             const handleSubmitScore = async () => {
@@ -253,9 +254,12 @@
 
                 recognition.onstart = () => { setIsRecording(true); setRecognitionText(''); };
                 recognition.onresult = (e) => {
-                    const speech = e.results[0][0].transcript.toLowerCase().trim().replace(/[.,!?;:]/g, "");
-                    const target = shuffledQuiz[quizIndex].word.toLowerCase();
-                    setRecognitionText(speech);
+                    // ✨ 核心修復：去除標點符號與多餘空格
+                    const speech = e.results[0][0].transcript.toLowerCase().trim().replace(/[^a-z]/g, "");
+                    const target = shuffledQuiz[quizIndex].word.toLowerCase().trim().replace(/[^a-z]/g, "");
+                    setRecognitionText(e.results[0][0].transcript);
+                    
+                    // ✨ 只要字母部分相同即視為正確
                     checkResult(speech === target || speech.includes(target) || target.includes(speech));
                 };
                 recognition.onerror = () => setIsRecording(false);
@@ -272,19 +276,10 @@
                             <p className="text-slate-400 font-bold text-sm mb-10 tracking-[0.2em] uppercase">Student Login</p>
                             <form className="space-y-6 text-left" onSubmit={e => { e.preventDefault(); if(user.name&&user.class&&user.no) setView('learn'); }}>
                                 <div className="flex gap-4">
-                                    <div className="flex-1">
-                                        <label className="block font-black mb-2 text-xs text-slate-500 uppercase">Class *</label>
-                                        <input className="brutal-input" placeholder="104" value={user.class} onChange={e => setUser({...user, class: e.target.value})} required />
-                                    </div>
-                                    <div className="flex-1">
-                                        <label className="block font-black mb-2 text-xs text-slate-500 uppercase">No. *</label>
-                                        <input className="brutal-input" placeholder="e.g. 15" value={user.no} onChange={e => setUser({...user, no: e.target.value})} required />
-                                    </div>
+                                    <div className="flex-1"><label className="block font-black mb-2 text-xs text-slate-500 uppercase">Class *</label><input className="brutal-input" placeholder="104" value={user.class} onChange={e => setUser({...user, class: e.target.value})} required /></div>
+                                    <div className="flex-1"><label className="block font-black mb-2 text-xs text-slate-500 uppercase">No. *</label><input className="brutal-input" placeholder="15" value={user.no} onChange={e => setUser({...user, no: e.target.value})} required /></div>
                                 </div>
-                                <div>
-                                    <label className="block font-black mb-2 text-xs text-slate-500 uppercase">Name *</label>
-                                    <input className="brutal-input" placeholder="e.g. 王小明" value={user.name} onChange={e => setUser({...user, name: e.target.value})} required />
-                                </div>
+                                <div><label className="block font-black mb-2 text-xs text-slate-500 uppercase">Name *</label><input className="brutal-input" placeholder="姓名" value={user.name} onChange={e => setUser({...user, name: e.target.value})} required /></div>
                                 <button type="submit" className="w-full py-5 bg-[#5D5FEF] text-white rounded-2xl font-black text-xl brutal-btn flex items-center justify-center gap-3 mt-4">START JOURNEY <Icons.ArrowRight size={24} /></button>
                             </form>
                         </div>
@@ -297,13 +292,13 @@
                     <div className="brutal-card bg-white rounded-3xl p-3 flex justify-between items-center shadow-[6px_6px_0px_0px_#000]">
                         <div className="flex items-center gap-3">
                             <Icons.Zap size={22} className="text-yellow-400 fill-current" />
-                            <div className="flex flex-col"><span className="font-black text-base italic leading-none text-slate-800 tracking-tighter">VOCABPOP</span><span className="text-[10px] text-slate-400 font-bold uppercase mt-1 leading-none">{user.class}班 {user.no}號 {user.name}</span></div>
+                            <div className="flex flex-col"><span className="font-black text-base italic leading-none text-slate-800 tracking-tighter">VOCABPOP</span><span className="text-[10px] text-slate-400 font-bold uppercase mt-1">{user.class}班 {user.no}號 {user.name}</span></div>
                         </div>
                         <div className="bg-black text-white rounded-full px-4 py-1.5 flex items-center gap-2 text-xs font-black tracking-tighter">
                             <span className="text-yellow-400">★ LV.1</span> <span className="text-slate-500">|</span> <span>{user.xp} XP</span>
                         </div>
                     </div>
-                    <div className="flex gap-3 mt-4 px-1">
+                    <div className="flex gap-3 mt-4 px-1 pb-2">
                         <button onClick={() => setView('learn')} className={`flex-1 py-2.5 brutal-btn rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all ${view === 'learn' ? 'bg-[#A5F3FC] translate-y-0.5 shadow-none' : 'bg-white'}`}><Icons.Book size={18} /> LEARN</button>
                         <button onClick={() => setView('coach')} className={`flex-1 py-2.5 brutal-btn rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all ${view === 'coach' ? 'bg-[#F9A8D4] translate-y-0.5 shadow-none' : 'bg-white'}`}><Icons.Coach size={18} /> COACH</button>
                     </div>
@@ -313,7 +308,7 @@
             if (view === 'learn') {
                 const w = vocabBank[currentWordIdx];
                 return (
-                    <div className="flex-1 flex flex-col pb-10">
+                    <div className="flex-1 flex flex-col pb-20">
                         <NavHeader />
                         <div className="px-5 mt-2 animate-pop">
                             <div className="brutal-card-heavy rounded-[40px] overflow-hidden flex flex-col bg-white">
@@ -331,8 +326,8 @@
                                         <h3 className="font-black text-sm flex items-center gap-2 uppercase text-slate-800 mb-2 tracking-widest"><div className="w-2.5 h-2.5 bg-yellow-400 border-2 border-black rounded-full"></div> Meaning</h3>
                                         <p className="text-slate-600 font-bold text-xl border-l-4 border-slate-100 pl-4 leading-snug">{w.meaning}</p>
                                     </div>
-                                    <div className="bg-emerald-50/50 p-5 rounded-2xl border-2 border-emerald-100 italic"><p className="text-base font-bold text-slate-700">"{w.s.replace('___', w.word)}"</p></div>
-                                    <div className="bg-blue-50/50 p-4 rounded-xl border-2 border-blue-100"><h4 className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">🔗 Word Family:</h4><p className="text-sm font-black text-slate-700">{w.family}</p></div>
+                                    <div className="bg-emerald-50/50 p-5 rounded-2xl border-2 border-emerald-100 italic font-medium"><p className="text-base text-slate-700">"{w.s.replace('___', w.word)}"</p></div>
+                                    <div className="bg-blue-50/50 p-4 rounded-xl border-2 border-blue-100"><h4 className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1 leading-none">🔗 Word Family:</h4><p className="text-sm font-black text-slate-700">{w.family}</p></div>
                                 </div>
                                 <div className="p-6 pt-0 flex justify-between gap-4">
                                     <button disabled={currentWordIdx === 0} onClick={() => setCurrentWordIdx(i => i-1)} className="flex-1 py-4 brutal-btn bg-slate-100 rounded-3xl font-black text-sm">PREV</button>
@@ -346,20 +341,21 @@
 
             if (view === 'coach') {
                 return (
-                    <div className="flex-1 flex flex-col h-full">
+                    <div className="flex-1 flex flex-col">
                         <NavHeader />
-                        <div className="px-5 mt-4 mb-8 flex-1 flex flex-col justify-between animate-pop space-y-3">
+                        <div className="px-5 mt-4 mb-8 flex-1 flex flex-col gap-4 animate-pop">
                             {[
                                 { m: 'speak', t: 'PRO SPEAK', d: '發音挑戰 (隨機 15 題)', c: '#86EFAC', i: <Icons.Mic size={32}/> },
                                 { m: 'spell', t: 'SPELL IT', d: '聽寫挑戰 (隨機 15 題)', c: '#93C5FD', i: <Icons.Keyboard size={32}/> },
                                 { m: 'fill', t: 'FILL IN', d: '搭配克漏字 (隨機 15 題)', c: '#FDBA74', i: <Icons.Pen size={32}/> }
                             ].map((b, i) => (
-                                <button key={i} onClick={() => startQuiz(b.m)} className="flex-1 brutal-card-heavy p-4 flex items-center gap-6 rounded-3xl min-h-[90px]" style={{backgroundColor: b.c}}>
+                                <button key={i} onClick={() => startQuiz(b.m)} className="flex-1 brutal-card-heavy p-5 flex items-center gap-6 rounded-3xl min-h-[90px]" style={{backgroundColor: b.c}}>
                                     <div className="bg-white p-4 rounded-2xl border-[3px] border-black shadow-[4px_4px_0px_0px_#000]">{b.i}</div>
-                                    <div className="text-left leading-none">
-                                        <div className="font-black text-2xl mb-1 text-black tracking-tighter">{b.t}</div>
-                                        <div className="text-[11px] font-bold opacity-70 uppercase tracking-tight leading-none mt-1">{b.d}</div>
+                                    <div className="text-left leading-tight flex-1">
+                                        <div className="font-black text-xl mb-1 text-black tracking-tighter uppercase">{b.t}</div>
+                                        <div className="text-[10px] font-bold opacity-70 uppercase tracking-tight leading-none">{b.d}</div>
                                     </div>
+                                    <Icons.ArrowRight size={20} className="text-black opacity-30" />
                                 </button>
                             ))}
                         </div>
@@ -370,13 +366,13 @@
             if (view === 'quiz') {
                 const cur = shuffledQuiz[quizIndex];
                 return (
-                    <div className="flex-1 flex flex-col p-6 animate-pop h-full pb-10">
+                    <div className="flex-1 flex flex-col p-6 animate-pop pb-10">
                         <div className="flex justify-between items-center mb-5">
                             <button onClick={() => setView('coach')} className="px-4 py-2 brutal-btn bg-white rounded-xl flex items-center gap-2 text-xs font-black shadow-[4px_4px_0px_0px_#000]"><Icons.RotateCcw size={16}/> EXIT</button>
                             <div className="font-black text-sm bg-black text-white px-5 py-2 rounded-full text-center tracking-tighter">{quizIndex + 1} / 15</div>
                         </div>
                         
-                        <div className="brutal-card-heavy rounded-[40px] p-8 flex-1 flex flex-col justify-center items-center relative min-h-[300px] mb-8 text-center bg-white">
+                        <div className="brutal-card-heavy rounded-[40px] p-8 flex-1 flex flex-col justify-center items-center relative min-h-[320px] mb-8 text-center bg-white">
                             {quizMode === 'spell' && (
                                 <div className="w-full">
                                     <button onClick={() => speak(cur.word)} className="w-20 h-20 bg-[#A5F3FC] rounded-full brutal-btn flex items-center justify-center mb-8 mx-auto shadow-[6px_6px_0px_0px_#000]"><Icons.Volume2 size={40}/></button>
